@@ -5,6 +5,9 @@ const cloudinary = require('cloudinary')
 require("dotenv").config();
 const fs = require('fs')
 const path = require('path')
+const pdf = require('html-pdf')
+
+const pdfTemplate = require('./documents')
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -186,8 +189,13 @@ exports.getmyapointment = async (req, res) => {
   try {
     const apointment = await Apointment.findOne({ _id: appoinmentid }).exec();
     // const apointment = await Apointment.find();
-    res.status(200).json({apointment: apointment});
     console.log(apointment)
+    pdf.create(pdfTemplate(apointment.appointmentDate, apointment.appointmentTime, apointment.physician, apointment.gender, apointment.fullname, apointment.appointmentNote), {}).toFile('result.pdf', err => {
+      if(err){
+        res.send(Promise.reject())
+      }
+      res.send(Promise.resolve())
+    })
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -196,6 +204,18 @@ exports.getmyapointment = async (req, res) => {
   }
 };
 
+// get pdf
+exports.getpdf = async (req, res) => {
+  try {
+    console.log('getting pdf...')
+     res.sendFile(path.join(__dirname, '../', 'result.pdf'))
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      desc: "Error in getpdf controller-" + error,
+    });
+  }
+}
 
 // edit apointment
 exports.updateapointment = async (req, res) => {

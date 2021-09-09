@@ -4,6 +4,8 @@ import "./MyAppointment.css"
 import { DatePickerComponent, TimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import axios from "axios";
 import decode from "jwt-decode";
+import { saveAs} from 'file-saver';
+
 
 class MyAppointments extends Component {
 
@@ -164,10 +166,12 @@ class MyAppointments extends Component {
         try {
             var option = window.confirm("Do you want a PDF version ? ")
             if(option){
-            await axios.get(`http://localhost:6500/patient/download_pdf/${id}`)
-                .then((res) => {                   
-                    console.log(res)
-                })                
+            await axios.post(`http://localhost:6500/patient/download_pdf/${id}`)
+                .then(() => axios.get('http://localhost:6500/patient/download', { responseType: 'blob' }))
+                .then((res) => {
+                    const pdfBlob = new Blob([res.data], { type: 'application/pdf' })
+                    saveAs(pdfBlob, 'result.pdf')
+                })              
                 .catch((err) => {
                     alert("Error occurred" + err);
                 });
