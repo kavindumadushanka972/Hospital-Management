@@ -132,6 +132,7 @@ class MyAppointments extends Component {
         )
         this.setState({ appointments: result })
     }
+
     handleSearchArea = (e) => {
         //console.log(e.currentTarget.value);
         const searchKey = e.currentTarget.value;
@@ -141,6 +142,40 @@ class MyAppointments extends Component {
             }
         })
     }
+
+    // pdf generation part
+    // handlepdf = async (id) => {
+    //     try {
+    //         await axios.get(`http://localhost:6500/patient/download_pdf/${id}`).then(res => {
+    //         console.log(res)
+    //     })
+    //     .catch((err) => {
+    //         alert("Error occurred" + err);
+    //     });
+    //     } catch (error) {
+    //         alert("Error occurred" + error);
+    //     }
+        
+    // }
+
+    // pdf generate
+    handlepdf = async (id) => {
+        console.log(id);
+        try {
+            var option = window.confirm("Do you want a PDF version ? ")
+            if(option){
+            await axios.get(`http://localhost:6500/patient/download_pdf/${id}`)
+                .then((res) => {                   
+                    console.log(res)
+                })                
+                .catch((err) => {
+                    alert("Error occurred" + err);
+                });
+            }
+        } catch (error) {
+            alert("Error occurred" + error);
+        }
+    };
 
     render() {
         return (
@@ -195,11 +230,11 @@ class MyAppointments extends Component {
                                                 <i className="far fa-edit" ></i>&nbsp; Edit
                                             </a>
                                             &nbsp;
-                                            <a className="btn btn-danger" href="#" style={{ marginTop: "10px" }}onClick={this.onDelete.bind(this,appointments._id)} >
+                                            <a className="btn btn-danger" href="#" style={{ marginTop: "10px" }} onClick={this.onDelete.bind(this,appointments._id)} >
                                                 <i className="far fa-trash-alt"></i>&nbsp; Delete
                                             </a>
                                             &nbsp;
-                                            <a className="btn btn-primary" href="#" style={{ marginTop: "10px" }}>
+                                            <a className="btn btn-primary" href="#" style={{ marginTop: "10px" }} onClick={this.handlepdf.bind(this,appointments._id)}>
                                                 <i className="fa fa-download"></i>&nbsp; Generate PDF
                                             </a>
                                         </th>

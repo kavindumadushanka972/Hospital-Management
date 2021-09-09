@@ -180,6 +180,21 @@ exports.getapointment = async (req, res) => {
   }
 };
 
+// generate pdf
+exports.getmyapointment = async (req, res) => {
+  const appoinmentid = req.params.id
+  try {
+    const apointment = await Apointment.findOne({ _id: appoinmentid }).exec();
+    // const apointment = await Apointment.find();
+    res.status(200).json({apointment: apointment});
+    console.log(apointment)
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      desc: "Error in getapointment controller-" + error,
+    });
+  }
+};
 
 
 // edit apointment

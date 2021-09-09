@@ -6,14 +6,16 @@ const {
     updatePatientDetails,
     getPatientDetails,
     deletePatientDetails,
-    upload
+    upload,
+    getmyapointment
     
 } = require("../../controllers/PatientController");
 
 router.route('/getPatientDetails/:id').get(protectedPatient, getPatientDetails);
 router.route('/updatePatientDetails').put(updatePatientDetails,protectedPatient);
 router.route('/deletePatientProfile/:id').delete(deletePatientDetails,protectedPatient);
-router.route('/upload').post(upload)
+router.route('/upload').post(upload);
+router.route('/download_pdf/:id').get(getmyapointment)
 
 module.exports=router;
 
