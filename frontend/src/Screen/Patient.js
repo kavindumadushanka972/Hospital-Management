@@ -24,7 +24,7 @@ class PatientProfile extends Component {
     role: '',
     username: '',
     zipcode: '',
-    
+    avatar: ''
   }
 
   componentDidMount = async () => {
@@ -61,6 +61,7 @@ class PatientProfile extends Component {
           this.setState({ role: this.state.user.role })
           this.setState({ username: this.state.user.username })
           this.setState({ zipcode: this.state.user.zipcode })
+          this.setState({ avatar: this.state.user.avatar})
           console.log(this.state.user);
         }
       }
@@ -101,6 +102,32 @@ class PatientProfile extends Component {
    
   }
 
+  handleUpload = async e => {
+    e.preventDefault()
+    try{
+      const file = e.target.files[0]
+      if(!file) return alert("File not exists")
+
+      if(file.size > 1024 * 1024) // 1mb
+          return alert("Size too large!")
+
+      if(file.type !== 'image/jpeg' && file.type !== 'image/png') // 1mb
+          return alert("File format is incorrect.")
+
+      let formData = new FormData()
+      formData.append('file', file)
+
+      const res = await axios.post('http://localhost:6500/patient/upload', formData, {
+        headers: {'content-type': 'multipart/form-data'}
+      })
+      console.log(res.data)
+      this.setState({ avatar: res.data.url})
+
+    } catch (err){
+      alert(err.response.data.msg)
+    }
+  }
+
   submitDetails = (e) => {
     e.preventDefault();
 
@@ -116,7 +143,8 @@ class PatientProfile extends Component {
       password: this.state.password,
       phone: this.state.phone,
       username: this.state.username,
-      zipcode: this.state.zipcode
+      zipcode: this.state.zipcode,
+      avatar: this.state.avatar
     }
 
 
@@ -165,7 +193,9 @@ class PatientProfile extends Component {
         </div>
         <Container>
           <div style={{ position: "absolute" }}>
-            <Image style={{ marginTop: "90px", width: "20%", height: "80%", marginLeft: "10%" }} src="../123456.jpg" />
+          <div style={{ position: "absolute" }}>
+            <Image src={this.state.avatar} />
+          </div>
           </div>
         </Container>
         <h3 className="patient-top-title" textAlign="center" style={{ marginLeft: "30%", marginTop: "35px" }}>Patient Profile</h3>
@@ -233,6 +263,19 @@ class PatientProfile extends Component {
           closable={false}
         >
           <Modal.Body >
+
+              <Form.Group as={Row} className="mb-3" style={{ marginLeft: "4%", width: "90%" }}>
+                <Form.Label column sm={2} style={{ marginTop: "20px", font: " bold 20px/20px Times New Roman,serif" }} >
+                  Avatar
+                </Form.Label>
+                <Col sm={6}>
+                  <Image src={this.state.avatar} />
+                </Col>
+                <span>
+                  <input type="file" name="file" id="file_up"
+                  accept="image/*" onChange={this.handleUpload} />
+                </span>
+              </Form.Group>
          
               <Form.Group as={Row} className="mb-3" style={{ marginLeft: "4%", width: "90%" }}>
                 <Form.Label column sm={2} style={{ marginTop: "20px", font: " bold 20px/20px Times New Roman,serif" }} >

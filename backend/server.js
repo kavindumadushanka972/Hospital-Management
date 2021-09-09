@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fileUpload = require('express-fileupload')
 
 //import routes
 
@@ -17,6 +18,10 @@ const medicineOrderRoutes=require("./routes/medicine-order-routes");
 
 
 const app = express();
+
+app.use(fileUpload({
+  useTempFiles: true
+}))
 
 app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));

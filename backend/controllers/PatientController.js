@@ -1,7 +1,16 @@
 const PatientModel = require("../models/patient-model");
 const AllUsersModel = require("../models/allusers-model");
 const Apointment = require("../models/appointment-model");
+const cloudinary = require('cloudinary')
+require("dotenv").config();
+const fs = require('fs')
+const path = require('path')
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 exports.updatePatientDetails = async (req, response) => {
   const body = req.body;
@@ -21,7 +30,8 @@ exports.updatePatientDetails = async (req, response) => {
       zipcode: body.zipcode,
       nicNumber: body.nicNumber,
       fullname: body.fullname,
-      phone: body.phone
+      phone: body.phone,
+      avatar: body.avatar
     })
 
     response.send({ success: true, message: "Successfully Updated" })
@@ -39,6 +49,38 @@ exports.getPatientDetails = async (req, res) => {
   } catch (e) {
     console.log(e)
   }
+}
+
+exports.upload = (req, res) => {
+  try {
+    console.log(req)
+    if(!req.files || Object.keys(req.files).length === 0)
+        return res.status(400).json({msg: 'No files were uploaded.'})
+    
+    const file = req.files.file;
+    console.log(file)
+    if(file.size > 1024*1024) {
+        removeTmp(file.tempFilePath)
+        return res.status(400).json({msg: "Size too large"})
+    }
+
+    if(file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png'){
+        removeTmp(file.tempFilePath)
+        return res.status(400).json({msg: "File format is incorrect."})
+    }
+
+    cloudinary.v2.uploader.upload(file.tempFilePath, {folder: "test"}, async(err, result)=>{
+        if(err) throw err;
+
+        removeTmp(file.tempFilePath)
+
+        res.json({public_id: result.public_id, url: result.secure_url})
+    })
+
+
+} catch (err) {
+    return res.status(500).json({msg: err.message})
+}
 }
 
 //delete patient profile
@@ -210,6 +252,11 @@ exports.deleteapointment = async (req, res) => {
 //   }
 // }
 
+const removeTmp = (path) =>{
+  fs.unlink(path, err=>{
+      if(err) throw err;
+  })
+}
 
 
 
