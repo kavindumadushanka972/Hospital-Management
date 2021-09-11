@@ -198,7 +198,7 @@ class MyMedicineOrders extends Component {
             <div className="container">
                 <div className="row" >
                     <div className="col-lg-9 mt-2 mb-2">
-                        <h3 className="myappointment-top-title" textAlign="center" style={{ marginLeft: "30%", marginTop: "35px" }}>My Appointments</h3>
+                        <h3 className="myappointment-top-title" textAlign="center" style={{ marginLeft: "30%", marginTop: "35px" }}>My Medicine Orders</h3>
                     </div>
                     {/* <div className="input-group rounded" style={{ marginTop: "30px", marginLeft: "30%", marginBottom: "30px" }}>
                         <input type="search"
