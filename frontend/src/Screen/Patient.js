@@ -4,6 +4,7 @@ import "../Screen/PatientProfile/PatientProfile.css";
 import decode from "jwt-decode";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import image14 from "../assests/image14.jpg"
 
 
 class PatientProfile extends Component {
@@ -192,17 +193,22 @@ class PatientProfile extends Component {
 
         </div>
         <Container>
-          <div style={{ position: "absolute" }}>
-          <div style={{ position: "absolute" }}>
-            <Image src={this.state.avatar} />
-          </div>
-          </div>
+          
         </Container>
         <h3 className="patient-top-title" textAlign="center" style={{ marginLeft: "30%", marginTop: "35px" }}>Patient Profile</h3>
         <div style={{ paddingTop: "5vh", paddingBottom: "5vh" }}>
           <Container >
             <Form style={{ marginLeft: "40%", width: "55%" }} >
               <div className="patient-form-body">
+
+                <Form.Group className="mb-3" as={Col} md={10} >
+                  
+                    <div>
+                      <Image src={this.state.avatar}  style={{width: "200px", marginLeft: "110px"}} />
+                    </div>
+                  
+                </Form.Group>
+
                 <Form.Group className="mb-3" as={Col} md={10} >
                   <Form.Label style={{ marginTop: "20px", font: " bold 20px/20px Times New Roman,serif" }}>Full Name</Form.Label>
                   <Form.Control type="text" value={this.state.user.fullname} style={{ maxHeight: "100%", marginTop: "8px" }} readOnly />
@@ -269,7 +275,7 @@ class PatientProfile extends Component {
                   Avatar
                 </Form.Label>
                 <Col sm={6}>
-                  <Image src={this.state.avatar} />
+                  <Image src={this.state.avatar} style={{width: "100px"}} />
                 </Col>
                 <span>
                   <input type="file" name="file" id="file_up"
