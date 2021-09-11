@@ -1,5 +1,5 @@
-module.exports = ( appointmentDate, appointmentTime, physician, gender, fullname, appointmentNote ) => {
-    console.log(appointmentDate, appointmentTime, physician, gender, fullname, appointmentNote)
+module.exports = ( appointmentDate, appointmentTime, physician, gender, fullname, appointmentNote, _id ) => {
+    console.log(appointmentDate, appointmentTime, physician, gender, fullname, appointmentNote, _id)
 return `
     <!doctype html>
     <html>
@@ -86,9 +86,14 @@ return `
                    <td colspan="2">
                       <table>
                          <tr>
-                            <td class="title"><img  src="https://res.cloudinary.com/iplus/image/upload/v1627570231/SPM/logo_copy_qfmuvj.png?fit=800%2C600&ssl=1"
+                            <td class="title"><img  src="https://res.cloudinary.com/derpuzhfi/image/upload/v1631200686/test/vz6sm5h5qhiozcsimygl.jpg?fit=800%2C600&ssl=1"
                                style="width:100%; max-width:156px;"></td>
-                            
+                           <td>
+                              <h1>iCross Hospitals</h1>
+                              <h3>No 30 Wakwella Rd, Galle 80000</h3>
+                              <h3>TP: 0914 944 775</h3>
+                           </td>
+                           
                          </tr>
                       </table>
                    </td>
@@ -98,30 +103,38 @@ return `
                       <table>
                          <tr>
                             <td>
-                               Customer name: 
+                              Patient name: ${fullname}
                             </td>
                             <td>
-                               Receipt number: 
+                               Receipt ID: ${_id}
                             </td>
                          </tr>
                       </table>
                    </td>
                 </tr>
                 <tr class="heading">
-                   <td>Bought items:</td>
-                   <td>Price</td>
+                   <td>Physician</td>
+                   <td>${physician}</td>
                 </tr>
                 <tr class="item">
-                   <td>First item:</td>
-                   <td></td>
+                   <td>Date</td>
+                   <td>${appointmentDate}</td>
                 </tr>
                 <tr class="item">
-                   <td>Second item:</td>
-                   <td></td>
+                   <td>Time</td>
+                   <td>${appointmentTime}</td>
+                </tr>
+                <tr class="item">
+                   <td>Gender</td>
+                   <td>${gender}</td>
+                </tr>
+                <tr class="item">
+                   <td>Appointment Note</td>
+                   <td>${appointmentNote}</td>
                 </tr>
              </table>
              <br />
-             <h1 class="justify-center">Total price: </h1>
+             <h1 class="justify-center">Thank You!</h1>
           </div>
        </body>
     </html>

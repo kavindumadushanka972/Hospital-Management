@@ -17,7 +17,7 @@ router.route('/updatePatientDetails').put(updatePatientDetails,protectedPatient)
 router.route('/deletePatientProfile/:id').delete(deletePatientDetails,protectedPatient);
 router.route('/upload').post(upload);
 router.route('/download_pdf/:id').post(getmyapointment);
-router.route('/download').get(getpdf);
+router.route('/download').get(getpdf)
 
 module.exports=router;
 

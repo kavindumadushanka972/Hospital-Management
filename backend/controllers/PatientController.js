@@ -190,9 +190,12 @@ exports.getmyapointment = async (req, res) => {
     const apointment = await Apointment.findOne({ _id: appoinmentid }).exec();
     // const apointment = await Apointment.find();
     console.log(apointment)
-    pdf.create(pdfTemplate(apointment.appointmentDate, apointment.appointmentTime, apointment.physician, apointment.gender, apointment.fullname, apointment.appointmentNote), {}).toFile('result.pdf', err => {
+    pdf.create(pdfTemplate(apointment.appointmentDate, apointment.appointmentTime, apointment.physician, apointment.gender, apointment.fullname, apointment.appointmentNote, apointment._id), {}).toFile('result.pdf', err => {
       if(err){
-        res.send(Promise.reject())
+        res.status(500).json({
+          success: false,
+          desc: "Error in getpdf controller-" + error,
+        });
       }
       res.send(Promise.resolve())
     })
@@ -208,7 +211,7 @@ exports.getmyapointment = async (req, res) => {
 exports.getpdf = async (req, res) => {
   try {
     console.log('getting pdf...')
-     res.sendFile(path.join(__dirname, '../', 'result.pdf'))
+    res.sendFile(path.join(__dirname, '../', 'result.pdf'))
   } catch (error) {
     res.status(500).json({
       success: false,
