@@ -16,7 +16,8 @@ class MedicineOrder extends Component {
         currentlyTakingMedications: '',
         existingMedicalProblems: '',
         userId: '',
-        signature:''
+        signature:'',
+        photo: ''
       }
 
       componentDidMount = async () => {
@@ -41,6 +42,32 @@ class MedicineOrder extends Component {
         console.log(e);
       }
 
+      handleUpload = async e => {
+        e.preventDefault()
+        try{
+          const file = e.target.files[0]
+          if(!file) return alert("File not exists")
+    
+          if(file.size > 1024 * 1024) // 1mb
+              return alert("Size too large!")
+    
+          if(file.type !== 'image/jpeg' && file.type !== 'image/png') // 1mb
+              return alert("File format is incorrect.")
+    
+          let formData = new FormData()
+          formData.append('file', file)
+    
+          const res = await axios.post('http://localhost:6500/patient/upload', formData, {
+            headers: {'content-type': 'multipart/form-data'}
+          })
+          console.log(res.data)
+          this.setState({ photo: res.data.url})
+    
+        } catch (err){
+          alert(err.response.data.msg)
+        }
+      }
+
       emptyFields = () => {
         this.setState({ name: '' })
         this.setState({ age: '' })
@@ -51,6 +78,7 @@ class MedicineOrder extends Component {
         this.setState({ currentlyTakingMedications: '' })
         this.setState({ existingMedicalProblems: '' })
         this.setState({ signature: '' })
+        this.setState({ photo: '' })
       }
 
       handleSubmit = (e) => {
@@ -66,7 +94,8 @@ class MedicineOrder extends Component {
           allergies: this.state.allergies,  
           currentlyTakingMedications: this.state.currentlyTakingMedications,  
           existingMedicalProblems: this.state.existingMedicalProblems,  
-          signature: this.state.signature  
+          signature: this.state.signature,
+          photo: this.state.photo
         }
     
         const config = {
@@ -77,7 +106,7 @@ class MedicineOrder extends Component {
         console.log(this.state.userId)
 
         // add order
-    axios.post(`http://localhost:6500/codebusters/api/patientpvt/ordermedicine/order/save/${this.state.userId}`, order, config).then(res => {
+    axios.post(`http://localhost:6500/patient/medicineOrder/${this.state.userId}`, order, config).then(res => {
         if (res.data.success) {
           alert("Successfully Appointment Inserted");
           //window.location.reload(false);
@@ -144,7 +173,7 @@ class MedicineOrder extends Component {
 
                                 <Form.Group className="mb-3"  controlId="formFile" height="30%">
                                     <Form.Label style={{ marginTop: "20px" , font:" bold 20px/20px Times New Roman,serif"}}>Medicine List</Form.Label>
-                                    <Form.Control type="file" style={{ marginLeft: "10%" }}  />
+                                    <Form.Control type="file" style={{ marginLeft: "10%" }} onChange={this.handleUpload} />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1" height="30%">

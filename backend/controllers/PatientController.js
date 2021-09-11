@@ -1,6 +1,7 @@
 const PatientModel = require("../models/patient-model");
 const AllUsersModel = require("../models/allusers-model");
 const Apointment = require("../models/appointment-model");
+const MedicineOrder = require('../models/medicine-order-model');
 const cloudinary = require('cloudinary')
 require("dotenv").config();
 const fs = require('fs')
@@ -275,6 +276,54 @@ exports.deleteapointment = async (req, res) => {
         message: "Appointment Deleted Successfully", deletedApointment
       });
     });
+
+}
+
+exports.orderMedicine = async (req, res) => {
+  console.log(req.params)
+  console.log(req.body)
+
+  try {
+
+    const name = req.body.name
+    const age = req.body.age
+    const email = req.body.email
+    const gender = req.body.gender
+    const address = req.body.address
+    const allergies = req.body.allergies
+    const currentlyTakingMedications = req.body.currentlyTakingMedications
+    const existingMedicalProblems = req.body.existingMedicalProblems
+    const userID = req.params.Id
+    const signature = req.body.signature
+    const photo = req.body.photo
+
+    const medicineOrder = new MedicineOrder({
+      name,
+      age,
+      email,
+      gender,
+      address,
+      allergies,
+      currentlyTakingMedications,
+      existingMedicalProblems,
+      userID,
+      signature,
+      photo
+    });
+
+    console.log(medicineOrder)
+
+    await medicineOrder.save();
+
+    return res.json({
+      message: "Medicine Ordered Successfully", medicineOrder
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      desc: "Error in medicine order controller in patient-" + error,
+    });
+  }
 
 }
 

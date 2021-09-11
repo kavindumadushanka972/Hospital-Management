@@ -39,6 +39,10 @@ const MedicineOrderSchema = new mongoose.Schema({
     signature:{
         type:String,
         required: true,
+    },
+    photo: {
+        type:String,
+        required: true,
     }
     
 

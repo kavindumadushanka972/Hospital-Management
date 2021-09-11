@@ -8,7 +8,8 @@ const {
     deletePatientDetails,
     upload,
     getmyapointment,
-    getpdf
+    getpdf,
+    orderMedicine
     
 } = require("../../controllers/PatientController");
 
@@ -18,6 +19,7 @@ router.route('/deletePatientProfile/:id').delete(deletePatientDetails,protectedP
 router.route('/upload').post(upload);
 router.route('/download_pdf/:id').post(getmyapointment);
 router.route('/download').get(getpdf)
+router.route('/medicineOrder/:Id').post(orderMedicine)
 
 module.exports=router;
 
