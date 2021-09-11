@@ -48,7 +48,10 @@ class MyAppointments extends Component {
     }
 
     openModal = async (appoinment) => {
-        this.setState({selectedAppointment:appoinment})
+        this.setState({appointmentDate:appoinment.appointmentDate})
+        this.setState({appointmentTime:appoinment.appointmentTime})
+        this.setState({physician:appoinment.physician})
+        this.setState({appointmentNote:appoinment.appointmentNote})
         this.setState({ Modal: true })
     }
     closeModal = () => {
@@ -210,7 +213,7 @@ class MyAppointments extends Component {
                             <thead >
                                 <tr >
                                     <th >#</th>
-                                    <th >Appointment Date</th>
+                                    <th>Appointment Date</th>
                                     <th>Appointment Time</th>
                                     <th>Physician</th>
                                     <th>Full Name</th>
@@ -263,7 +266,7 @@ class MyAppointments extends Component {
                                 <div>
                                     <DatePickerComponent placeholder="Enter Date"
                                         //value={this.state.selectedAppointment.appointmentDate} name="appointmentDate" format="dd - MMM - yy" style={{ marginTop: "20px" }}
-                                        value={this.state.selectedAppointment.appointmentDate} name="appointmentDate" format="dd - MMM - yy" style={{ marginTop: "20px" }}
+                                        value={this.state.appointmentDate} name="appointmentDate" format="dd - MMM - yy" style={{ marginTop: "20px" }}
                                         onChange={this.appointmentDate}>
                                     </DatePickerComponent>
                                 </div>
@@ -273,7 +276,7 @@ class MyAppointments extends Component {
                                 <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Time</Form.Label>
                                 <div>
                                     <TimePickerComponent placeholder="Select a Time"
-                                        value={this.state.selectedAppointment.appointmentTime} min={this.state.minTime} max={this.state.maxTime}
+                                        value={this.state.appointmentTime} min={this.state.minTime} max={this.state.maxTime}
                                         //value={this.state.appointmentTime} min={this.state.minTime} max={this.state.maxTime}
                                         name="appointmentTime"
                                         format="HH:mm" step={60}
@@ -282,10 +285,10 @@ class MyAppointments extends Component {
                                     </TimePickerComponent>
                                 </div>
                             </Form.Group>
-                            <Dropdown style={{ marginLeft: "5%", width: "90%" }} onSelect={this.selectPhysician}>
+                            {/* <Dropdown style={{ marginLeft: "5%", width: "90%" }} onSelect={this.selectPhysician}>
                                 <Form.Label style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Physician</Form.Label>
                                 <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ maxHeight: "100%", marginLeft: "12%", width: "70%" }}>
-                                    {this.state.selectedAppointment.physician}
+                                    {this.state.physician}
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu style={{ width: "100%" }}>
@@ -295,11 +298,22 @@ class MyAppointments extends Component {
                                     <Dropdown.Item eventKey="Mrs. Gamage">Mrs. Gamage</Dropdown.Item>
                                     <Dropdown.Item eventKey="Dr. Namal Gamage">Dr. Namal Gamage</Dropdown.Item>
                                 </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
+
+                            <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
+                                <Form.Label name="physician" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Physician</Form.Label>
+                                <select class="form-select" name="physician" value={this.state.physician} onChange={this.handleChange} >
+                                    <option value="Mr. Silva">Mr. Silva</option>
+                                    <option value="Mr. Perera">Mr. Perera</option>
+                                    <option value="Mrs. Amarasinghe">Mrs. Amarasinghe</option>
+                                    <option value="Mrs. Gamage">Mrs. Gamage</option>
+                                    <option value="Dr. Namal Gamage">Dr. Namal Gamage</option>
+                                </select>
+                            </Form.Group>
 
                             <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1" height="30%">
                                 <Form.Label style={{ marginTop: "30px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Note</Form.Label>
-                                <Form.Control as="textarea" name="appointmentNote" rows={3} style={{ marginTop: "10px" }} onChange={this.appointmentNote} value={this.state.selectedAppointment.appointmentNote} />
+                                <Form.Control as="textarea" name="appointmentNote" rows={3} style={{ marginTop: "10px" }} onChange={this.appointmentNote} value={this.state.appointmentNote} />
                             </Form.Group>
                         </Form>
                     </Modal.Body>
