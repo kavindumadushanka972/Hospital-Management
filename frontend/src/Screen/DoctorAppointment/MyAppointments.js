@@ -4,7 +4,7 @@ import "./MyAppointment.css"
 import { DatePickerComponent, TimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import axios from "axios";
 import decode from "jwt-decode";
-import { saveAs} from 'file-saver';
+import { saveAs } from 'file-saver';
 
 
 class MyAppointments extends Component {

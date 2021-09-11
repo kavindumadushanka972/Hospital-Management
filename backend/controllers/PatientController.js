@@ -279,6 +279,7 @@ exports.deleteapointment = async (req, res) => {
 
 }
 
+// order medicine
 exports.orderMedicine = async (req, res) => {
   console.log(req.params)
   console.log(req.body)
@@ -326,7 +327,67 @@ exports.orderMedicine = async (req, res) => {
   }
 
 }
+// get medicine orders by user
+exports.getMyMedicineOrders = async (req, res) => {
+  try {
+    const orders = await MedicineOrder.find({userID: req.params.Id}).exec();
+    console.log(orders)
+    res.status(200).send({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      desc: "Error in medicine order controller in patient-" + error,
+    });
+  }
+}
 
+// update medicine order
+exports.updateMedicineOrders = async (req, res) => {
+
+  try {
+    
+    await MedicineOrder.findByIdAndUpdate({ _id: req.body.id }, {
+      name: req.body.name,
+      age: req.body.age,
+      email: req.body.email,
+      gender: req.body.gender,
+      address: req.body.address,
+      allergies: req.body.allergies,
+      currentlyTakingMedications: req.body.currentlyTakingMedications,
+      existingMedicalProblems: req.body.existingMedicalProblems,
+      signature: req.body.signature,
+      photo: req.body.photo
+    })
+    console.log(req.body)
+
+    res.send({ success: true, message: "Successfully Updated" })
+  } catch (e) {
+    res.send({ success: false, message: "Didn't Update" })
+  }
+}
+
+exports.deleteMedicineOrder = async (req, res) => {
+
+  //console.log(backend)
+
+  let orderID = req.params.Id;
+  console.log(orderID)
+  const deletedApointment = await MedicineOrder.findByIdAndDelete(
+    orderID).exec((err) => {
+      if (err) {
+        return res.status(400).json({
+          message: "Appointment Deleted Unsuccessfully", err
+        });
+      }
+      return res.json({
+        message: "Appointment Deleted Successfully", deletedApointment
+      });
+  });
+
+}
 
 // exports.getOrderDetails = async (req, res) => {
 //   const id = req.params.id;

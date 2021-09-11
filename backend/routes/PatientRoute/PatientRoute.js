@@ -9,7 +9,10 @@ const {
     upload,
     getmyapointment,
     getpdf,
-    orderMedicine
+    orderMedicine,
+    getMyMedicineOrders,
+    updateMedicineOrders,
+    deleteMedicineOrder
     
 } = require("../../controllers/PatientController");
 
@@ -20,6 +23,9 @@ router.route('/upload').post(upload);
 router.route('/download_pdf/:id').post(getmyapointment);
 router.route('/download').get(getpdf)
 router.route('/medicineOrder/:Id').post(orderMedicine)
+router.route('/getmyorders/:Id').get(getMyMedicineOrders)
+router.route('/updateOrder').put(updateMedicineOrders)
+router.route('/deleteOrder/:Id').delete(deleteMedicineOrder)
 
 module.exports=router;
 
