@@ -39,7 +39,7 @@ class DoctorAppointment extends Component {
       console.log(localStorage.getItem("authToken"));
     }
 
-    // add appointment
+    // getting details of doctors
     axios.get('http://localhost:6500/patient/doctors').then(res => {
       if (res.data.success) {
         this.setState({doctors: res.data.doctors})

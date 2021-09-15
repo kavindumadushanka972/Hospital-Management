@@ -20,7 +20,8 @@ class MyAppointments extends Component {
         fullname: '',
         appointmentNote: '',
         selectedAppointment: '',
-        appointments: []
+        appointments: [],
+        doctors: []
     };
 
     componentDidMount = async () => {
@@ -44,6 +45,16 @@ class MyAppointments extends Component {
                     appointments: res.data.apointment
                 });
                 console.log(this.state.appointments);
+            }
+        })
+
+        // getting details of doctors
+        axios.get('http://localhost:6500/patient/doctors').then(res => {
+            if (res.data.success) {
+            this.setState({doctors: res.data.doctors})
+            console.log(this.state.doctors)
+            } else {
+            alert(res.data.message);
             }
         })
     }
@@ -300,7 +311,7 @@ class MyAppointments extends Component {
                                 </Dropdown.Menu>
                             </Dropdown> */}
 
-                            <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
+                            {/* <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
                                 <Form.Label name="physician" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Physician</Form.Label>
                                 <select class="form-select" name="physician" value={this.state.physician} onChange={this.handleChange} >
                                     <option value="Mr. Silva">Mr. Silva</option>
@@ -308,6 +319,15 @@ class MyAppointments extends Component {
                                     <option value="Mrs. Amarasinghe">Mrs. Amarasinghe</option>
                                     <option value="Mrs. Gamage">Mrs. Gamage</option>
                                     <option value="Dr. Namal Gamage">Dr. Namal Gamage</option>
+                                </select>
+                            </Form.Group> */}
+
+                            <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
+                                <Form.Label name="physician" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Physician</Form.Label>
+                                <select class="form-select" name="physician" value={this.state.physician} onChange={this.handleChange} >
+                                {this.state.doctors.map((e) => {
+                                        return <option key={e._id} value={e.fullname}>{e.fullname}</option>;
+                                })}
                                 </select>
                             </Form.Group>
 
