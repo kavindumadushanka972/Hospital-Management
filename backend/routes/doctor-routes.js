@@ -20,7 +20,6 @@ router.route("/getProfile").get(protectedDoctor, getDoctorDetails);
 router.route("/editProfile").put(protectedDoctor, updateDoctorDetails);
 router.route("/updatepic").put(protectedDoctor, updateProfilePicture);
 router.route("/deleteprofile").delete(protectedDoctor, deleteDoctorDetails);
-;
 router.route("/addreportrequest").put(protectedDoctor, addreportrequest);
 router.route("/updatereportrequest").put(protectedDoctor, updatereportrequest);
 router.route("/removereportrequest").put(protectedDoctor, removereportrequest);

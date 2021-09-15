@@ -12,7 +12,8 @@ const {
     orderMedicine,
     getMyMedicineOrders,
     updateMedicineOrders,
-    deleteMedicineOrder
+    deleteMedicineOrder,
+    getDoctors
     
 } = require("../../controllers/PatientController");
 
@@ -26,6 +27,7 @@ router.route('/medicineOrder/:Id').post(orderMedicine)
 router.route('/getmyorders/:Id').get(getMyMedicineOrders)
 router.route('/updateOrder').put(updateMedicineOrders)
 router.route('/deleteOrder/:Id').delete(deleteMedicineOrder)
+router.route('/doctors').get(getDoctors)
 
 module.exports=router;
 

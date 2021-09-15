@@ -2,6 +2,7 @@ const PatientModel = require("../models/patient-model");
 const AllUsersModel = require("../models/allusers-model");
 const Apointment = require("../models/appointment-model");
 const MedicineOrder = require('../models/medicine-order-model');
+const DoctorModel = require('../models/doctor-model');
 const cloudinary = require('cloudinary')
 require("dotenv").config();
 const fs = require('fs')
@@ -138,7 +139,7 @@ exports.addappointment = async (req, res) => {
     const appointmentDate = body.appointmentDate
     const appointmentTime = body.appointmentTime
     const physician = body.physician
-    const gender = patient.gender
+    const gender = body.gender
     const userID = id
     const fullname = patient.fullname
     const appointmentNote = body.appointmentNote
@@ -223,36 +224,35 @@ exports.getpdf = async (req, res) => {
 
 // edit apointment
 exports.updateapointment = async (req, res) => {
-  let { appointmentDate, appointmentTime, physician, gender, userId, fullname, appointmentNote } = req.body;
+  let { appointmentDate, appointmentTime, physician, appointmentNote, id } = req.body;
+  console.log(appointmentDate, appointmentTime, physician, appointmentNote, id)
   try {
-    const updatedapointment = await Apointment.findByIdAndUpdate(
-      userId,
-      {
-        $set: {
-          appointmentDate,
-          appointmentTime,
-          physician,
-          gender,
-          fullname,
-          appointmentNote
-        },
-      },
-      {
-        new: true,
-        upsert: false,
-        omitUndefined: true,
-      }
-    );
-    res.status(200).send({
-      success: true,
-      desc: "apointment data updated successfully",
-      updatedapointment,
-    });
+    // const updatedapointment = await Apointment.findByIdAndUpdate(
+    //   userId,
+    //   {
+    //     $set: {
+    //       appointmentDate,
+    //       appointmentTime,
+    //       physician,
+    //       appointmentNote
+    //     },
+    //   },
+    //   {
+    //     new: true,
+    //     upsert: false,
+    //     omitUndefined: true,
+    //   }
+    // );
+
+    await Apointment.findByIdAndUpdate({ _id: req.body.id }, {
+      appointmentDate: req.body.appointmentDate,
+      appointmentTime: req.body.appointmentTime,
+      physician: req.body.physician,
+      appointmentNote: req.body.appointmentNote
+    })
+    res.send({ success: true, message: "Successfully Updated" })
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      desc: "Error in updatedapointment controller-" + error,
-    });
+    res.send({ success: false, message: "Didn't Update" })
   }
 };
 
@@ -387,6 +387,22 @@ exports.deleteMedicineOrder = async (req, res) => {
       });
   });
 
+}
+
+exports.getDoctors = async (req, res) => {
+    try {
+      const doctors = await DoctorModel.find()
+      console.log(doctors)
+      res.status(200).send({
+        success: true,
+        doctors,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        desc: "Error in getDoctor controller in patient-" + error,
+      });
+    }
 }
 
 // exports.getOrderDetails = async (req, res) => {

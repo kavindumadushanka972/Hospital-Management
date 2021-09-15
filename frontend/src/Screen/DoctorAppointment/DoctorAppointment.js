@@ -13,13 +13,15 @@ class DoctorAppointment extends Component {
   state = {
     appointmentDate: '',
     appointmentTime: '',
-    physician: 'Select One',
+    physician: '',
     appointmentNote: '',
     dateValue: '',
     timeValue: '',
     minTime: '',
     maxTime: '',
-    userId: ''
+    userId: '',
+    gender: '',
+    doctors: []
     //postSubmitted:false
   }
 
@@ -36,9 +38,26 @@ class DoctorAppointment extends Component {
       console.log(this.state.userId);
       console.log(localStorage.getItem("authToken"));
     }
+
+    // add appointment
+    axios.get('http://localhost:6500/patient/doctors').then(res => {
+      if (res.data.success) {
+        this.setState({doctors: res.data.doctors})
+        console.log(this.state.doctors)
+      } else {
+        alert(res.data.message);
+      }
+    })
+
   }
 
   handleChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+    console.log(value)
+  }
+
+  handleChangeDoctor = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
     console.log(value)
@@ -49,11 +68,17 @@ class DoctorAppointment extends Component {
     console.log(e);
   }
 
+  handleSelectGender = (e) => {
+    this.setState({ gender: e });
+    console.log(e);
+  }
+
   emptyFields = () => {
     this.setState({ appointmentDate: '' })
     this.setState({ appointmentTime: '' })
     this.setState({ physician: '' })
     this.setState({ appointmentNote: '' })
+    this.setState({ gender: '' })
   }
 
   // submitPost = (e)=>{
@@ -75,7 +100,8 @@ class DoctorAppointment extends Component {
       appointmentDate: this.state.appointmentDate.toLocaleDateString(),
       appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
       physician: this.state.physician,
-      appointmentNote: this.state.appointmentNote     
+      appointmentNote: this.state.appointmentNote,
+      gender: this.state.gender     
     }
 
     const config = {
@@ -113,7 +139,7 @@ class DoctorAppointment extends Component {
                   <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Date</Form.Label>
                   <div>
                     <DatePickerComponent placeholder="Enter Date"
-                      value={this.state.dateValue} name="appointmentDate" format="dd - MMM - yy" style={{ marginTop: "20px" }}
+                      value={this.state.appointmentDate} name="appointmentDate" format="dd - MMM - yy" style={{ marginTop: "20px" }}
                       onChange={this.handleChange}>
                     </DatePickerComponent>
                   </div>
@@ -123,7 +149,7 @@ class DoctorAppointment extends Component {
                   <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Time</Form.Label>
                   <div>
                     <TimePickerComponent placeholder="Select a Time"
-                      value={this.state.timeValue} min={this.state.minTime} max={this.state.maxTime}
+                      value={this.state.appointmentTime} min={this.state.minTime} max={this.state.maxTime}
                       name="appointmentTime"
                       format="HH:mm" step={60}
                       style={{ marginTop: "20px" }}
@@ -132,12 +158,43 @@ class DoctorAppointment extends Component {
                   </div>
                 </Form.Group>
 
-                <Dropdown as={Col} md={12} onSelect={this.handleSelect} >
+                {/* <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
+                    <Form.Label name="gender" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Gender</Form.Label>
+                    <select class="form-select" name="gender" value={this.state.gender} onChange={this.handleChange} >
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </Form.Group> */}
+
+                {/* <Dropdown as={Col} md={10} onSelect={this.handleSelectGender}>
+                    <Form.Label style={{ marginTop: "8px", font:" bold 20px/20px Times New Roman,serif" }}> Gender</Form.Label>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ width: "100%", maxHeight: "100%", marginTop: "8px" }}>
+                        {this.state.gender}
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu style={{ width: "100%" }}>
+                        <Dropdown.Item eventKey="Female">Female</Dropdown.Item>
+                        <Dropdown.Item eventKey="Male">Male</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown> */}
+
+                <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
+                    <Form.Label name="physician" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}>Gender</Form.Label>
+                    <select class="form-select" name="gender" value={this.state.gender} onChange={this.handleChange} >
+                    <option value="">Select One</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                </Form.Group>
+
+                {/* <Dropdown as={Col} md={12} onSelect={this.handleSelect} >
                   <Form.Label style={{ marginTop: "30px", font: " bold 20px/25px Times New Roman,serif" }}> Preferred Physician</Form.Label>
                   <Dropdown.Toggle variant="success" id="dropdown-basic" style={{ width: "100%", marginTop: "10px" }}>
                     {this.state.physician}
                   </Dropdown.Toggle>
 
+
+                  
                   <Dropdown.Menu style={{ width: "100%" }}>
                     <Dropdown.Item eventKey="Mr. Silva">Mr. Silva</Dropdown.Item>
                     <Dropdown.Item eventKey="Mr. Perera">Mr. Perera</Dropdown.Item>
@@ -145,8 +202,25 @@ class DoctorAppointment extends Component {
                     <Dropdown.Item eventKey="Mrs. Gamage">Mrs. Gamage</Dropdown.Item>
                     <Dropdown.Item eventKey="Dr. Namal Gamage">Dr. Namal Gamage</Dropdown.Item>
                     <Dropdown.Item eventKey="Lakindu Kavishka">Mr Lakindu Kavishka</Dropdown.Item>
+                    <select name="country" value={this.state.doctors}>
+                        {this.state.doctors.map((e) => {
+                            return <option key={e._id} value={e.fullname}>{e.fullname}</option>;
+                        })}
+                    </select>
+                      
+                    
                   </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> */}
+
+                <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
+                    <Form.Label name="physician" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Physician</Form.Label>
+                    <select class="form-select" name="physician" value={this.state.physician} onChange={this.handleChange} >
+                      <option value="">Select One</option>
+                      {this.state.doctors.map((e) => {
+                              return <option key={e._id} value={e.fullname}>{e.fullname}</option>;
+                      })}
+                    </select>
+                </Form.Group>
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1" height="30%">
                   <Form.Label style={{ marginTop: "30px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Note</Form.Label>

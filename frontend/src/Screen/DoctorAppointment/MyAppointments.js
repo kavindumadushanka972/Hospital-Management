@@ -11,6 +11,7 @@ class MyAppointments extends Component {
 
     state = {
         id: '',
+        userId: '',
         Modal: false,
         appointmentDate: '',
         appointmentTime: '',
@@ -48,8 +49,9 @@ class MyAppointments extends Component {
     }
 
     openModal = async (appoinment) => {
-        this.setState({appointmentDate:appoinment.appointmentDate})
-        this.setState({appointmentTime:appoinment.appointmentTime})
+        this.setState({id: appoinment._id})
+        // this.setState({appointmentDate:appoinment.appointmentDate})
+        // this.setState({appointmentTime:appoinment.appointmentTime})
         this.setState({physician:appoinment.physician})
         this.setState({appointmentNote:appoinment.appointmentNote})
         this.setState({ Modal: true })
@@ -85,13 +87,11 @@ class MyAppointments extends Component {
 
     Appointment = () => {
         const appointment = {
-            appointmentDate: this.state.selectedAppointment.appointmentDate.toLocaleDateString(),
-            appointmentTime: this.state.selectedAppointment.appointmentTime.toLocaleDateString(),
-            physician: this.state.selectedAppointment.physician,
-            gender: this.state.selectedAppointment.gender,
-            userId: this.state.selectedAppointment.userId,
-            fullname: this.state.selectedAppointment.fullname,
-            appointmentNote: this.state.selectedAppointment.appointmentNote
+            appointmentDate: this.state.appointmentDate.toLocaleDateString(),
+            appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
+            physician: this.state.physician,
+            id: this.state.id,
+            appointmentNote: this.state.appointmentNote
 
         }
         const config = {
