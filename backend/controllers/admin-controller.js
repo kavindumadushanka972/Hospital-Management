@@ -1,5 +1,9 @@
 const Adminmodal = require("../models/admin-model");
 const Allusers =require("../models/allusers-model");
+const Doctors = require('../models/doctor-model')
+const Pharmasist = require('../models/pharmasist-model')
+const Chemist = require('../models/labchemist-model')
+const Salarymodal = require('../models/salary-model')
 
 //Fetch admin details
   exports.getAdminDetails = async (req, res) => {
@@ -30,3 +34,75 @@ exports.getAlluserDetails = async (req, res) => {
       });
     }
   };
+
+exports.savepayments = async (req, res) => {
+  
+  try {
+    doctors = await Doctors.find()
+    pharmasist = await Pharmasist.find()
+    chemist = await Chemist.find()
+    
+    var id;
+    var salary;
+    var date = new Date().toISOString().slice(0, 10)
+    var salaryRecord;
+    
+
+    for (const key in doctors){
+      userId = doctors[key]._id
+      salary = req.body.doctorSalary
+      date = date
+      role = 'doctor'
+
+      salaryRecord = new Salarymodal({
+        userId,
+        salary,
+        date,
+        role
+      })
+
+      await salaryRecord.save()
+      console.log({userId, salary, date, role})
+    }
+
+    for (const key in pharmasist){
+      id = pharmasist[key]._id
+      salary = req.body.pharmasistSalary
+      date = date
+      role = 'pharmasist'
+
+      salaryRecord = new Salarymodal({
+        userId,
+        salary,
+        date,
+        role
+      })
+
+      await salaryRecord.save()
+      console.log({userId, salary, date, role})
+
+    }
+
+    for (const key in chemist){
+      id = chemist[key]._id
+      salary = req.body.chemistSalary
+      date = date
+      role = 'labchemist'
+
+      salaryRecord = new Salarymodal({
+        userId,
+        salary,
+        date,
+        role
+      })
+
+      await salaryRecord.save()
+      console.log({userId, salary, date, role})
+
+      res.send({ success: true });
+  }
+  } catch (err) {
+    res.send({ success: false });
+  }
+
+}
