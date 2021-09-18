@@ -64,7 +64,7 @@ exports.upload = (req, res) => {
     
     const file = req.files.file;
     console.log(file)
-    if(file.size > 1024*1024) {
+    if(file.size > 1024*1024*3) { // file size above 3MB
         removeTmp(file.tempFilePath)
         return res.status(400).json({msg: "Size too large"})
     }
@@ -313,12 +313,10 @@ exports.orderMedicine = async (req, res) => {
     });
 
     console.log(medicineOrder)
-
+    console.log('saving');
     await medicineOrder.save();
-
-    return res.json({
-      message: "Medicine Ordered Successfully", medicineOrder
-    });
+    console.log('saved');
+    res.send({ success: true, medicineOrder });
   } catch (error) {
     res.status(500).json({
       success: false,

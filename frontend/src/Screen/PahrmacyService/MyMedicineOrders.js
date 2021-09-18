@@ -3,6 +3,7 @@ import { Button, Form, Dropdown, Col, Modal, Table, Row } from "react-bootstrap"
 import axios from "axios";
 import decode from "jwt-decode";
 import "../DoctorAppointment/MyAppointment.css"
+import loading from '../../assests/loading.gif'
 
 
 class MyMedicineOrders extends Component {
@@ -119,16 +120,16 @@ class MyMedicineOrders extends Component {
         try{
           const file = e.target.files[0]
           if(!file) return alert("File not exists")
-    
+            
           if(file.size > 1024 * 1024) // 1mb
               return alert("Size too large!")
     
           if(file.type !== 'image/jpeg' && file.type !== 'image/png') // 1mb
               return alert("File format is incorrect.")
-    
+            
           let formData = new FormData()
           formData.append('file', file)
-    
+          this.setState({ photo: loading})
           const res = await axios.post('http://localhost:6500/patient/upload', formData, {
             headers: {'content-type': 'multipart/form-data'}
           })
@@ -315,7 +316,7 @@ class MyMedicineOrders extends Component {
                                     Medicine List
                                 </Form.Label>
                                 <Col sm={3}>
-                                 <img src={this.state.photo} style={{width: "300px"}}></img>
+                                 <img src={this.state.photo} style={{width: "200px"}}></img>
                                 </Col>
                                 <span>
                                 <input type="file" name="file" id="file_up"

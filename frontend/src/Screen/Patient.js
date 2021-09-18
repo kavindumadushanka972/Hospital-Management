@@ -5,6 +5,8 @@ import decode from "jwt-decode";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import image14 from "../assests/image14.jpg"
+import Slider from './Slides/PatientSlides'
+import loading from '../assests/loading.gif'
 
 
 class PatientProfile extends Component {
@@ -109,7 +111,7 @@ class PatientProfile extends Component {
       const file = e.target.files[0]
       if(!file) return alert("File not exists")
 
-      if(file.size > 1024 * 1024) // 1mb
+      if(file.size > 1024 * 1024 * 3) // 3mb
           return alert("Size too large!")
 
       if(file.type !== 'image/jpeg' && file.type !== 'image/png') // 1mb
@@ -117,6 +119,7 @@ class PatientProfile extends Component {
 
       let formData = new FormData()
       formData.append('file', file)
+      this.setState({ avatar: loading})
 
       const res = await axios.post('http://localhost:6500/patient/upload', formData, {
         headers: {'content-type': 'multipart/form-data'}
@@ -180,8 +183,12 @@ class PatientProfile extends Component {
 
   render() {
     return (
-     
       <div className="home">
+        
+        
+        
+        
+        
         <div className="row row-cols-1 row-cols-md-3 g-4">
           <Link to="/profile/patient/getServices">
             <div className="col">  
@@ -193,11 +200,11 @@ class PatientProfile extends Component {
 
         </div>
         <Container>
-          
+        
         </Container>
         <h3 className="patient-top-title" textAlign="center" style={{ marginLeft: "30%", marginTop: "35px" }}>Patient Profile</h3>
         <div style={{ paddingTop: "5vh", paddingBottom: "5vh" }}>
-          <Container >
+          <Container>
             <Form style={{ marginLeft: "40%", width: "55%" }} >
               <div className="patient-form-body">
 

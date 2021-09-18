@@ -14,7 +14,7 @@ const Patient = () => {
   return (
     //style={{display: "flex",justifyContent: "center",alignItems: "center"}} 
     <div style={{ marginTop: "50px", marginBottom: "50px", marginLeft: "5%", marginRight: "5%", paddingTop: "5vh", paddingBottom: "5vh" }}   >
-
+   
       <Tabs
         id="controlled-tab-example"
         activeKey={key}
@@ -79,11 +79,12 @@ const Patient = () => {
       
       </Tabs>
 
-
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRclWhY1hKnF3-pK9ZyaPxViO_52BziVmyzurN45QzfOGiHumHEY0hs2eZGyqRHfl0Vpe0&usqp=CAU" className="ml-auto mr-auto" style={{width: '400px', marginTop: '25px'}}></img>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREtfQgvIyy-aeF-8a7gAYOI8K7-L4pbRhEmdFsX2zTecC5LQher9XspcfeFGOJ2j6C46M&usqp=CAU" className="ml-auto mr-auto" style={{width: '400px', marginTop: '25px'}}></img>
+      <img src="https://previews.123rf.com/images/bytedust/bytedust1210/bytedust121000009/15861423-child-discharged-from-hospital-and-going-home.jpg" className="ml-auto mr-auto" style={{width: '400px', marginTop: '25px'}}></img>
 
     </div>
-
-
+  
   );
 }
 

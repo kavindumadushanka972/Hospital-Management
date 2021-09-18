@@ -1,6 +1,7 @@
 import React from "react";
 import Carousel from 'react-bootstrap/Carousel'
 
+
 const PatientSlides = () => {
     return (
         <div style={{position:"absolute", width:"80%"}}>

@@ -3,6 +3,7 @@ import { Button, Form, Dropdown, Container, Col, ButtonGroup, Row } from "react-
 import "./MedicineOrder.css";
 import axios from "axios";
 import decode from "jwt-decode";
+import loading from '../../assests/loading.gif'
 
 class MedicineOrder extends Component {
 
@@ -45,6 +46,7 @@ class MedicineOrder extends Component {
       handleUpload = async e => {
         e.preventDefault()
         try{
+          
           const file = e.target.files[0]
           if(!file) return alert("File not exists")
     
@@ -56,7 +58,7 @@ class MedicineOrder extends Component {
     
           let formData = new FormData()
           formData.append('file', file)
-    
+          this.setState({ photo: loading})
           const res = await axios.post('http://localhost:6500/patient/upload', formData, {
             headers: {'content-type': 'multipart/form-data'}
           })
@@ -106,15 +108,19 @@ class MedicineOrder extends Component {
         console.log(this.state.userId)
 
         // add order
-    axios.post(`http://localhost:6500/patient/medicineOrder/${this.state.userId}`, order, config).then(res => {
-        if (res.data.success) {
-          alert("Successfully Appointment Inserted");
-          //window.location.reload(false);
-         // window.location=`/profile/patient/myAppointments`;
-        } else {
+        try {
+            axios.post(`http://localhost:6500/patient/medicineOrder/${this.state.userId}`, order).then(res => {
+          if (res.data.success) {
+            alert("Successfully Appointment Inserted");
+            window.location=`/profile/patient/myPharmacyOrders`;
+          } else {
+            alert(res.data.message);
+          }
+        })
+        } catch (error) {
           alert(res.data.message);
         }
-      })
+        
     }
     render() {
         return (
@@ -173,7 +179,13 @@ class MedicineOrder extends Component {
 
                                 <Form.Group className="mb-3"  controlId="formFile" height="30%">
                                     <Form.Label style={{ marginTop: "20px" , font:" bold 20px/20px Times New Roman,serif"}}>Medicine List</Form.Label>
-                                    <Form.Control type="file" style={{ marginLeft: "10%" }} onChange={this.handleUpload} />
+                                    <Col sm={3}>
+                                      <img src={this.state.photo} style={{width: "200px"}}></img>
+                                    </Col>
+                                <span>
+                                <input type="file" name="file" id="file_up"
+                                accept="image/*" onChange={this.handleUpload} />
+                                </span>
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1" height="30%">
