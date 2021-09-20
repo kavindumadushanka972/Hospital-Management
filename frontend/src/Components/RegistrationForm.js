@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Form, Col, Button, Spinner ,Container } from "react-bootstrap";
 import axios from "axios";
 import "./RegistrationForm.css";
+import validator from 'validator';
+
 
 const RegistrationForm = () => {
   
@@ -21,6 +23,8 @@ const RegistrationForm = () => {
     const [error, setError] = useState("");
     const [section, setSection] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+    const [phoneError, setPhoneError] = useState('');
+    const [emailError, setEmailError] = useState('');
   
     const registrationHandler = (e) => {
       e.preventDefault();
@@ -281,11 +285,31 @@ const RegistrationForm = () => {
                     type="email"
                     placeholder="Enter email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={
+                      (e) => {
+                        setEmail(e.target.value);
+                        var email = e.target.value;
+
+                        if (validator.isEmail(email)) {
+                          setEmailError('')
+                        } else {
+                          setEmailError('Enter valid Email!')
+                        }
+                      }
+                      
+                    }
                   />
                   <Form.Text className="text-muted">
                     We won't share your email with anyone else.
                   </Form.Text>
+                  <br></br>
+                  <span style={{
+                    fontWeight: 'bold',
+                    color: 'red',
+                  }}>{emailError}</span>
+                  
+                  
+                  
                 </Form.Group>
               </Form.Row>
               <Form.Row>
@@ -326,9 +350,26 @@ const RegistrationForm = () => {
                     placeholder="Contact Number"
                     value={phone}
                     onChange={(e) => {
+                      var phone = e.target.value
+                      var pattern = new RegExp(/^[0-9\b]+$/);
+                      
+                      if (!pattern.test(phone)) {
+
+                        setPhoneError('Enter valid phone number')
+                      }else if(phone.length != 10){
+
+                        setPhoneError('Enter valid phone number')
+
+                      } else {
+                        setPhoneError('')
+                      }
                       setphone(e.target.value);
                     }}
                   />
+                    <span style={{
+                      fontWeight: 'bold',
+                      color: 'red',
+                    }}>{phoneError}</span>
                   </Form.Group>
               </Form.Row>
               {role === "doctor" && (

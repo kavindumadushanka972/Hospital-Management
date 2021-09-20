@@ -21,7 +21,9 @@ class MyAppointments extends Component {
         appointmentNote: '',
         selectedAppointment: '',
         appointments: [],
-        doctors: []
+        doctors: [],
+        tempdate: '',
+        temptime: ''
     };
 
     componentDidMount = async () => {
@@ -61,8 +63,8 @@ class MyAppointments extends Component {
 
     openModal = async (appoinment) => {
         this.setState({id: appoinment._id})
-        // this.setState({appointmentDate:appoinment.appointmentDate})
-        // this.setState({appointmentTime:appoinment.appointmentTime})
+        this.setState({tempdate:appoinment.appointmentDate})
+        this.setState({temptime:appoinment.appointmentTime})
         this.setState({physician:appoinment.physician})
         this.setState({appointmentNote:appoinment.appointmentNote})
         this.setState({ Modal: true })
@@ -97,27 +99,105 @@ class MyAppointments extends Component {
     }
 
     Appointment = () => {
-        const appointment = {
-            appointmentDate: this.state.appointmentDate.toLocaleDateString(),
-            appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
-            physician: this.state.physician,
-            id: this.state.id,
-            appointmentNote: this.state.appointmentNote
 
-        }
-        const config = {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        if (this.state.appointmentDate == '' && this.state.appointmentTime == '') {
+            const appointment = {
+                appointmentDate: this.state.tempdate,
+                appointmentTime: this.state.temptime,
+                physician: this.state.physician,
+                id: this.state.id,
+                appointmentNote: this.state.appointmentNote
+    
             }
+
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                }
+            }
+    
+            // update appointments
+            axios.put('http://localhost:6500/codebusters/api/patientpvt/appointment/updateapointments', appointment, config).then(res => {
+                if (res.data.success) {
+                    alert(res.data.message);
+                    window.location.reload(false);
+                }
+            });
+        } 
+
+        else if(this.state.appointmentDate != '' && this.state.appointmentTime == '') {
+            const appointment = {
+                appointmentDate: this.state.appointmentDate.toLocaleDateString(),
+                appointmentTime: this.state.temptime,
+                physician: this.state.physician,
+                id: this.state.id,
+                appointmentNote: this.state.appointmentNote
+    
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                }
+            }
+    
+            // update appointments
+            axios.put('http://localhost:6500/codebusters/api/patientpvt/appointment/updateapointments', appointment, config).then(res => {
+                if (res.data.success) {
+                    alert(res.data.message);
+                    window.location.reload(false);
+                }
+            });
         }
 
-        // update appointments
-        axios.put('http://localhost:6500/codebusters/api/patientpvt/appointment/updateapointments', appointment, config).then(res => {
-            if (res.data.success) {
-                alert(res.data.message);
-                window.location.reload(false);
+        else if(this.state.appointmentDate == '' && this.state.appointmentTime != '') {
+            const appointment = {
+                appointmentDate: this.state.tempdate,
+                appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
+                physician: this.state.physician,
+                id: this.state.id,
+                appointmentNote: this.state.appointmentNote
+    
             }
-        });
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                }
+            }
+    
+            // update appointments
+            axios.put('http://localhost:6500/codebusters/api/patientpvt/appointment/updateapointments', appointment, config).then(res => {
+                if (res.data.success) {
+                    alert(res.data.message);
+                    window.location.reload(false);
+                }
+            });
+        }
+
+        else {
+            const appointment = {
+                appointmentDate: this.state.appointmentDate.toLocaleDateString(),
+                appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
+                physician: this.state.physician,
+                id: this.state.id,
+                appointmentNote: this.state.appointmentNote
+    
+            }
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                }
+            }
+    
+            // update appointments
+            axios.put('http://localhost:6500/codebusters/api/patientpvt/appointment/updateapointments', appointment, config).then(res => {
+                if (res.data.success) {
+                    alert(res.data.message);
+                    window.location.reload(false);
+                }
+            });
+        }
+        
+        
     }
              
     
@@ -272,8 +352,20 @@ class MyAppointments extends Component {
                 >
                     <Modal.Body >
                         <Form>
+
+                        <Form.Group className="mb-3" as={Col} md={10} controlId="formBasicDate">
+                                <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Old Apointment Date</Form.Label>
+                                <div>
+                                    <DatePickerComponent placeholder="Enter Date"
+                                        value={this.state.tempdate} style={{ marginTop: "20px" }}>
+                                    </DatePickerComponent>
+                                </div>
+                            </Form.Group>
+
+                            
+
                             <Form.Group className="mb-3" as={Col} md={10} controlId="formBasicDate">
-                                <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Date</Form.Label>
+                                <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>New Appointment Date</Form.Label>
                                 <div>
                                     <DatePickerComponent placeholder="Enter Date"
                                         //value={this.state.selectedAppointment.appointmentDate} name="appointmentDate" format="dd - MMM - yy" style={{ marginTop: "20px" }}
@@ -284,7 +376,15 @@ class MyAppointments extends Component {
                             </Form.Group>
 
                             <Form.Group className="mb-3" as={Col} md={10} controlId="formBasicTime">
-                                <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Appointment Time</Form.Label>
+                                <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>Old Appointment Time</Form.Label>
+                                <div>
+                                    <TimePickerComponent placeholder="Select a Time" value={this.state.temptime}>
+                                    </TimePickerComponent>
+                                </div>
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" as={Col} md={10} controlId="formBasicTime">
+                                <Form.Label style={{ marginTop: "20px", font: " bold 20px/25px Times New Roman,serif" }}>New Appointment Time</Form.Label>
                                 <div>
                                     <TimePickerComponent placeholder="Select a Time"
                                         value={this.state.appointmentTime} min={this.state.minTime} max={this.state.maxTime}

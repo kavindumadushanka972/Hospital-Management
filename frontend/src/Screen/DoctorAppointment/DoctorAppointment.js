@@ -95,32 +95,37 @@ class DoctorAppointment extends Component {
   handleSubmit = (e) => {
     
     e.preventDefault();
-   
-    const appointment = {
-      appointmentDate: this.state.appointmentDate.toLocaleDateString(),
-      appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
-      physician: this.state.physician,
-      appointmentNote: this.state.appointmentNote,
-      gender: this.state.gender     
-    }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+    if (this.state.gender != "" && this.state.physician != "" && this.state.appointmentDate != "" && this.state.appointmentTime != "") {
+      const appointment = {
+        appointmentDate: this.state.appointmentDate.toLocaleDateString(),
+        appointmentTime: this.state.appointmentTime.toLocaleTimeString(),
+        physician: this.state.physician,
+        appointmentNote: this.state.appointmentNote,
+        gender: this.state.gender     
       }
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        }
+      }
+      console.log(this.state.userId)
+  
+      // add appointment
+      axios.post(`http://localhost:6500/codebusters/api/patientpvt/appointment/addappointments/${this.state.userId}`, appointment, config).then(res => {
+        if (res.data.success) {
+          alert("Successfully Appointment Inserted");
+          //window.location.reload(false);
+          window.location=`/profile/patient/myAppointments`;
+        } else {
+          alert(res.data.message);
+        }
+      })
+    } else {
+      alert("You missing some information to add a doctor apointment!")
     }
-    console.log(this.state.userId)
-
-    // add appointment
-    axios.post(`http://localhost:6500/codebusters/api/patientpvt/appointment/addappointments/${this.state.userId}`, appointment, config).then(res => {
-      if (res.data.success) {
-        alert("Successfully Appointment Inserted");
-        //window.location.reload(false);
-        window.location=`/profile/patient/myAppointments`;
-      } else {
-        alert(res.data.message);
-      }
-    })
+  
   }
 
 

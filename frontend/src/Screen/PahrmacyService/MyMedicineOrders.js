@@ -4,6 +4,7 @@ import axios from "axios";
 import decode from "jwt-decode";
 import "../DoctorAppointment/MyAppointment.css"
 import loading from '../../assests/loading.gif'
+import validator from 'validator'
 
 
 class MyMedicineOrders extends Component {
@@ -22,7 +23,8 @@ class MyMedicineOrders extends Component {
         signature:'',
         selectedOrder: '',
         orders: [],
-        photo: ''
+        photo: '',
+        emailError: ''
     };
 
     componentDidMount = async () => {
@@ -47,6 +49,18 @@ class MyMedicineOrders extends Component {
         })
     }
 
+    validateEmail = (e) => {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+
+        var email = e.target.value
+      
+        if (validator.isEmail(email)) {
+          this.setState({ emailError: '' });
+        } else {
+          this.setState({ emailError: 'Enter valid email' });
+        }
+    }
     
 
     openModal = async (order) => {
@@ -162,36 +176,39 @@ class MyMedicineOrders extends Component {
     };
 
     Order = () => {
-        const order = {
-            id: this.state.id,
-            name: this.state.name,
-            age: this.state.age,
-            email: this.state.email,
-            gender: this.state.gender,
-            address: this.state.address,
-            allergies: this.state.allergies,
-            currentlyTakingMedications: this.state.currentlyTakingMedications,
-            existingMedicalProblems: this.state.existingMedicalProblems,
-            userId: this.state.userId,
-            signature: this.state.signature,
-            photo: this.state.photo
-
-        }
-        const config = {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        if(this.state.name != '' && this.state.age != '' && this.state.email != '' && this.state.gender != 'Select One' && this.state.photo != ''){
+            const order = {
+                id: this.state.id,
+                name: this.state.name,
+                age: this.state.age,
+                email: this.state.email,
+                gender: this.state.gender,
+                address: this.state.address,
+                allergies: this.state.allergies,
+                currentlyTakingMedications: this.state.currentlyTakingMedications,
+                existingMedicalProblems: this.state.existingMedicalProblems,
+                userId: this.state.userId,
+                signature: this.state.signature,
+                photo: this.state.photo
+    
             }
-        }
-
-        console.log(order)
-
-        // update medicine orders
-        axios.put('http://localhost:6500/patient/updateOrder', order, config).then(res => {
-            if (res.data.success) {
-                alert(res.data.message);
-                window.location.reload(false);
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                }
             }
-        });
+    
+            console.log(order)
+    
+            // update medicine orders
+            axios.put('http://localhost:6500/patient/updateOrder', order, config).then(res => {
+                if (res.data.success) {
+                    alert(res.data.message);
+                    window.location.reload(false);
+                }
+            });
+        
+        }
     }
     
     render() {
@@ -275,11 +292,15 @@ class MyMedicineOrders extends Component {
 
                             <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
                                     <Form.Label style={{ marginTop: "30px", font: " bold 20px/25px Times New Roman,serif" }}>Email</Form.Label>
-                                    <Form.Control type="text" name="email" style={{ marginTop: "10px" }} value={this.state.email} onChange={this.email} />
+                                    <Form.Control type="text" name="email" style={{ marginTop: "10px" }} value={this.state.email} onChange={this.validateEmail} />
+                                    <span style={{
+                                      fontWeight: 'bold',
+                                      color: 'red',
+                                    }}>{this.state.emailError}</span>
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="exampleFormage" height="30%">
-                                <Form.Label name="gender" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}> Gender</Form.Label>
+                                <Form.Label name="gender" style={{ marginTop: "10px", font: " bold 20px/20px Times New Roman,serif"}}>Gender</Form.Label>
                                 <select class="form-select" name="gender" value={this.state.gender} onChange={this.handleChange} >
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>

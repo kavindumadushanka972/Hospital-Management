@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import image14 from "../assests/image14.jpg"
 import Slider from './Slides/PatientSlides'
 import loading from '../assests/loading.gif'
-
+import Carousel from 'react-bootstrap/Carousel'
 
 class PatientProfile extends Component {
   
@@ -184,11 +184,7 @@ class PatientProfile extends Component {
   render() {
     return (
       <div className="home">
-        
-        
-        
-        
-        
+      
         <div className="row row-cols-1 row-cols-md-3 g-4">
           <Link to="/profile/patient/getServices">
             <div className="col">  
@@ -200,6 +196,43 @@ class PatientProfile extends Component {
 
         </div>
         <Container>
+        <div style={{position:"absolute", width:"30%", marginTop: "300px"}}>
+            
+            <Carousel variant="dark" fade >
+                <Carousel.Item interval={3000}>
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+
+                    <img
+                        className="d-block w-100"
+                        src="https://thumbs.dreamstime.com/b/online-doctor-telemedicine-medical-service-patients-vector-illustration-concept-consultation-internet-healthcare-182317956.jpg"
+                        
+                    />
+                    
+                </Carousel.Item>
+                <Carousel.Item interval={3000}>
+                    <img
+                        className="d-block w-100"
+                        src="https://southernmarinderm.com/wp-content/uploads/2020/03/telehealth-Synchronous-audio5.png"
+                        
+                    />
+                    
+                </Carousel.Item>
+                <Carousel.Item interval={3000}>
+                    <img
+                        className="d-block w-100"
+                        src="https://thumbs.dreamstime.com/b/doctor-using-stethoscope-phone-telemedicine-teleheal-telehealth-flat-vector-concept-illustration-hand-smartphone-88803780.jpg"
+                        
+                    />
+                    
+                </Carousel.Item>
+            </Carousel>
+
+
+        </div>
         
         </Container>
         <h3 className="patient-top-title" textAlign="center" style={{ marginLeft: "30%", marginTop: "35px" }}>Patient Profile</h3>
