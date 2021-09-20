@@ -9,6 +9,7 @@ import Slider from './Slides/PatientSlides'
 import loading from '../assests/loading.gif'
 import Carousel from 'react-bootstrap/Carousel'
 
+
 class PatientProfile extends Component {
   
   state = {
@@ -27,7 +28,8 @@ class PatientProfile extends Component {
     role: '',
     username: '',
     zipcode: '',
-    avatar: ''
+    avatar: '',
+    phoneError: ''
   }
 
   componentDidMount = async () => {
@@ -105,6 +107,22 @@ class PatientProfile extends Component {
    
   }
 
+  validatePhone = (e) => {
+    var phone = e.target.value
+    var pattern = new RegExp(/^[0-9\b]+$/);
+    
+    if (!pattern.test(phone)) {
+      this.setState({ phoneError: 'Enter valid phone number' });
+    }else if(phone.length != 10){
+
+      this.setState({ phoneError: 'Enter valid phone number' });
+
+    } else {
+      this.setState({ phoneError: '' });
+    }
+    this.setState({ phone: e.target.value });
+}
+
   handleUpload = async e => {
     e.preventDefault()
     try{
@@ -135,38 +153,44 @@ class PatientProfile extends Component {
   submitDetails = (e) => {
     e.preventDefault();
 
+    if (this.state.address != null && this.state.address != '' && this.state.bloodGroup != null && this.state.bloodGroup != '' && this.state.fullname != '' && this.state.gender != '' && this.state.gender != null && this.state.nicNumber != null && this.state.nicNumber != '' && this.state.phone != '' && this.state.phone != null) {
+      const patient = {
+        userId: this.state.userId,
+        address: this.state.address,
+        bloodGroup: this.state.bloodGroup,
+        email: this.state.email,
+        fullname: this.state.fullname,
+        gender: this.state.gender,
+        nicNumber: this.state.nicNumber,
+        password: this.state.password,
+        phone: this.state.phone,
+        username: this.state.username,
+        zipcode: this.state.zipcode,
+        avatar: this.state.avatar
+      }
+  
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        }
+      }
+  
+      // update patient details
+      axios.put('http://localhost:6500/patient/updatePatientDetails', patient, config).then(res => {
+        if (res.data.success) {
+          alert(res.data.message);
+          window.location.reload(false);
+          //window.location.reload();
+
+        }
+      })
+
+    }else{
+      alert('Oops! You havent entered some required information')
+    }
     
-    const patient = {
-      userId: this.state.userId,
-      address: this.state.address,
-      bloodGroup: this.state.bloodGroup,
-      email: this.state.email,
-      fullname: this.state.fullname,
-      gender: this.state.gender,
-      nicNumber: this.state.nicNumber,
-      password: this.state.password,
-      phone: this.state.phone,
-      username: this.state.username,
-      zipcode: this.state.zipcode,
-      avatar: this.state.avatar
-    }
-
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-      }
-    }
-
-    // update patient details
-    axios.put('http://localhost:6500/patient/updatePatientDetails', patient, config).then(res => {
-      if (res.data.success) {
-        alert(res.data.message);
-        window.location.reload(false);
-        //window.location.reload();
-
-      }
-    })
+    
   }
 
 
@@ -407,8 +431,13 @@ class PatientProfile extends Component {
                   Phone Contact
                 </Form.Label>
                 <Col sm={10}>
-                  <Form.Control type="number" placeholder="Enter your contact number" size="10" value={this.state.phone} name="phone" onChange={this.handleChange} style={{ marginLeft: "5%", width: "90%", marginTop: "20px" }} required />
+                  <Form.Control type="number" placeholder="Enter your contact number" size="10" value={this.state.phone} name="phone" onChange={this.validatePhone} style={{ marginLeft: "5%", width: "90%", marginTop: "20px" }} required />
+                  <span style={{
+                      fontWeight: 'bold',
+                      color: 'red',
+                  }}>{this.state.phoneError}</span>
                 </Col>
+                
               </Form.Group>
             
           </Modal.Body>

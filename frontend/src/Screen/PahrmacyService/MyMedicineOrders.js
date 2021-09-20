@@ -50,7 +50,7 @@ class MyMedicineOrders extends Component {
     }
 
     validateEmail = (e) => {
-        const { name, value } = event.target;
+        const { name, value } = e.target;
         this.setState({ [name]: value });
 
         var email = e.target.value
